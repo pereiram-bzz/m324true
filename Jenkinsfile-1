@@ -1,52 +1,31 @@
 pipeline {
     agent any
-
-    environment {
-        NODE_VERSION = '16.x' // Specify your desired Node.js version
+    tools {
+        nodejs "node"
     }
-
     stages {
-        stage('Checkout Code') {
+        stage('Cloning Repo') {
             steps {
-                // Checkout the code from the repository
-                git 'https://github.com/pereiram-bzz/m324true.git' // Replace with your actual repo URL
+                script {
+                    // Example of git clone
+                    git branch: 'master', url: "https://github.com/Poisonlocket/m324-jenkins-ci-cd.git"
+                }
             }
         }
-
-        stage('Install Node.js') {
+        stage('Install jest-cli') {
             steps {
-                // Install Node.js
-                sh 'curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION} | bash -'
-                sh 'apt-get install -y nodejs'
+                sh "npm install jest-cli -g"
             }
         }
-
         stage('Install Dependencies') {
             steps {
-                // Install project dependencies
-                sh 'npm install'
+                sh "npm install"
             }
         }
-
-        stage('Run Tests') {
+        stage('Test App') {
             steps {
-                // Run tests using Jest
-                sh 'npm test'
+                sh "npm test"
             }
-        }
-    }
-
-    post {
-        always {
-            // Archive test results (if applicable) and clean up
-            archiveArtifacts artifacts: '**/test-results/**/*.xml', allowEmptyArchive: true
-            junit '**/test-results/**/*.xml' // Assumes Jest outputs JUnit XML format
-        }
-        success {
-            echo 'Tests passed successfully!'
-        }
-        failure {
-            echo 'Tests failed!'
         }
     }
 }
