@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                     // Example of git clone
-                    git branch: 'master', url: "https://github.com/Poisonlocket/m324-jenkins-ci-cd.git"
+                    git branch: 'master', url: "https://github.com/pereiram-bzz/m324true.git"
                 }
             }
         }
